@@ -66,11 +66,16 @@ void User_Model() // 用户模式登录界面
         }
         else if (choose==2) SignUp_Window();
         else if (choose==3) break;
-        else cout << "输入错误，请重新输入";
+        else cout << "输入=错误，请重新输入";
         say_again(words);
     }
 
 }
+bool check(string name, string password)
+{
+
+}
+
 void User_Choose() // 用户选择界面
 {
     string words = "1.购买商品 2.发布商品 3.查看个人信息 4.注销登录";
@@ -110,7 +115,7 @@ void Release_Window() // 商品发布界面
             float price;
             int num;
             cout << "----请填写商品的相关信息----"<<'\n';
-            cout << ""
+            cout << "";
         }
 
     }

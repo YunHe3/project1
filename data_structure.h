@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #pragma once
 #include "string"
 using namespace std;
@@ -59,13 +58,4 @@ class Administrator // 定义管理员类
 class Transaction // 定义订单结构体
 {
 
-=======
-#pragma once
-class User // 定于用户类
-{
-public:
-
-private:
-
->>>>>>> origin/main
 };
