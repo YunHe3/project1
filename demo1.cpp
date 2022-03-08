@@ -5,9 +5,6 @@ using namespace std;
 
 int main()
 {
-	string c;
-	cin >> c;
-
-	cout << solve(c);
+	Login_Window();
 	return 0;
 }
