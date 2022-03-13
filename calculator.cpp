@@ -63,9 +63,9 @@ string trans_RPN(string expression) // 中缀转后缀
 	char ch = expression[index];
 	do {
 		index++;
-		if (ch <= '9' && ch >= '0' || ch == '.') ans += ch; // 操作数或小数点
-		else if (ch == '(') p.push('('); // 左括号
-		else if (ch == ')') // 右括号
+		if (ch <= '9' && ch >= '0' || ch == '.') ans += ch; // ????????С????
+		else if (ch == '(') p.push('('); // ??????
+		else if (ch == ')') // ??????
 		{
 			while (p.top() != '(')
 			{
@@ -74,7 +74,7 @@ string trans_RPN(string expression) // 中缀转后缀
 			}
 			p.pop();
 		}
-		else // 运算符
+		else // ?????
 		{
 			ans += " ";
 			while (true)
@@ -102,7 +102,7 @@ string trans_RPN(string expression) // 中缀转后缀
 }
 string calculator(string expression)
 {
-	stack<float> num; // 数字栈
+	stack<float> num; // ?????
 	int index = 0;
 	string nums = "";
 	char next_ch = ' ';
@@ -110,7 +110,7 @@ string calculator(string expression)
 	do 
 	{
 		index++;
-		if (ch <= '9' && ch >= '0' || ch=='.') // 判断为数字
+		if (ch <= '9' && ch >= '0' || ch=='.') // ?ж??????
 		{
 			nums = "";
 			if (ch == '.')nums = "0.";
@@ -130,7 +130,7 @@ string calculator(string expression)
 			float num2 = 0;
 			num2 = num.top();
 			num.pop();
-			if (num.empty()) // 参数缺少情况
+			if (num.empty()) // ??????????
 			{
 				if (ch == '-')
 				{
@@ -150,7 +150,7 @@ string calculator(string expression)
 	if (num.empty())return trans_S(to_string(ans));
 	else return "操作符误用";
 }
-string solve(string expression) // 对外接口
+string solve(string expression) // ??????
 {
 	string s = check(expression);
 	if (s=="False")return "圆括号匹配错误";
