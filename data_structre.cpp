@@ -1,25 +1,10 @@
 #include "iostream"
 #include "data_structure.h"
+#include "calculator.h"
 int Goods::total_num = 1;
 int User::user_num = 1;
 int Transaction::tran_num=1;
-float trans_F(string s) // ×Ö·û´®×ª¸¡µãÊý
-{
-    float ans = 0;
-    int len = s.length();
-    int index = 0;
-    while (index < len)
-    {
-        if (s[index] == '.')
-        {
-            ans += (s[index + 1] - '0') / 10.0;
-            return ans;
-        }
-        else ans = ans * 10 + (s[index]-'0');
-        index++;
-    }
-    return ans;
-}
+
 void User::SignUp()
 {
 

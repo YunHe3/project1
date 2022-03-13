@@ -1,7 +1,7 @@
-#include <map>
-#include <iostream>
+
 #include <stack>
 #include <string>
+#include "calculator.h"
 using namespace std;
 
 int pri(char ch) // сеох╪╤еп╤о

@@ -89,7 +89,6 @@ public:
         this->uid_b = uid_b;
         this->uid_s = uid_s;
         this->like = 0;
-        this->transaction_time
     }
 private:
     static int tran_num;

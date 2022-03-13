@@ -13,4 +13,4 @@ add_executable(project1
         Header.h
         platform.cpp
         sql_interpreter.cpp
-        toolbox.cpp)
+        toolbox.cpp calculator.h)
