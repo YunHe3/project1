@@ -1,3 +1,3 @@
-F:/南大/cs/高程/project/project1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-F:/南大/cs/高程/project/project1/cmake-build-debug/CMakeFiles/project1.dir
-F:/南大/cs/高程/project/project1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/huchuntao/Desktop/nju/ComputerScience/c:c++/gc_project1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/huchuntao/Desktop/nju/ComputerScience/c:c++/gc_project1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/huchuntao/Desktop/nju/ComputerScience/c:c++/gc_project1/cmake-build-debug/CMakeFiles/project1.dir

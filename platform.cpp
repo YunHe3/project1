@@ -6,11 +6,17 @@ using namespace std;
 
 map<string,User*> user_name; // 用户名与对象构建map
 map<string,Goods*> good_name;
+string what_time();
 void pre_load() // 加载数据
 {
     user_name.clear();
     good_name.clear();
 
+}
+bool find(string s, string aim) // 搜索
+{
+    if(s.find(aim)>s.length())return false;
+    else return true;
 }
 string cut = "======================================================================================================";
 void say(string words)
@@ -18,7 +24,7 @@ void say(string words)
     cout << cut << '\n';
     cout << words << '\n';
     cout << cut << '\n';
-    cout << "输入操作：";
+    cout << "Enter your option:";
 }
 void say_again(string words)
 {
@@ -26,11 +32,11 @@ void say_again(string words)
     cout << cut << '\n';
     cout << words << '\n';
     cout << cut << '\n';
-    cout << "输入操作：";
+    cout << "Enter your option:";
 }
 void Login_Window() // 主界面
 {
-    string words = "1.管理员登陆 2.用户登陆 3.退出程序";
+    string words = "1.Administrator login 2.User login 3.exit";
     say(words);
     int choose = 0;
     cin >> choose;
@@ -38,7 +44,7 @@ void Login_Window() // 主界面
         if (choose == 1) Administrator_Model();
         else if (choose == 2) User_Model();
         else if (choose == 3) break;
-        else cout << "输入错误，请重新输入";
+        else cout << "Wrong input";
         say_again(words);
         cin >> choose;
     }
@@ -51,7 +57,7 @@ void SignUp_Window() // 注册界面
 
 void User_Model() // 用户模式登陆界面
 {
-    string words = "1.已有账号，登陆 2.还没有账号，注册一个";
+    string words = "1.Login 2.Register";
     say(words);
     int choose = 0;
     cin >> choose;
@@ -61,33 +67,36 @@ void User_Model() // 用户模式登陆界面
         {
             string name;
             string password;
-            cout << "请输入用户名：";
+            cout << "Enter your name:";
             cin >> name;
             cout << '\n';
-            cout << "请输入密码：";
+            cout << "Enter your password:";
             cin >> password;
             if (check(name,password))
             {
-                cout << "-----登陆成功-----"<<'\n';
+                cout << "-----Succeed-----"<<'\n';
                 User_Choose(user_name[name]);
             }
-            else cout << "用户名或密码错误，自动退回上一步";
+            else cout << "Wrong name or password";
         }
         else if (choose==2) SignUp_Window();
         else if (choose==3) break;
-        else cout << "输入错误，请重新输入";
+        else cout << "Wrong input";
         say_again(words);
     }
 
 }
 bool check(string name, string password) // 用户名密码对应检查
 {
-
+    if(user_name[name]){
+        if(user_name[name]->show_password()==password)return true;
+    }
+    return false;
 }
 
 void User_Choose(User* user) // 用户选择界面
 {
-    string words = "1.购买商品 2.发布商品 3.查看个人信息 4.注销登陆";
+    string words = "1.Buy Goods 2.Release Goods 3.My information 4.Log out";
     say(words);
     int choose = 0;
     cin >> choose;
@@ -97,7 +106,7 @@ void User_Choose(User* user) // 用户选择界面
         else if (choose==2) Release_Window(user);
         else if (choose==3) MyDetail_Window(user);
         else if (choose==4) break;
-        else cout << "输入错误，请重新输入";
+        else cout << "Wrong input";
         say_again(words);
     }
 }
@@ -107,12 +116,88 @@ void Administrator_Model() // 管理员模式登陆界面
 }
 void Buy_Window(User* user) // 商品购买界面
 {
+    string words = "1.Goods list 2.Find Goods 3.My Transaction 4.Back";
+    say(words);
+    int choose = 0;
+    cin>>choose;
+    while(true)
+    {
+        if (choose==1) {
+            cout<<"commodityID  commodityName  price  addedDate  sellerID";
+            for(auto it = good_name.begin();it != good_name.end();it++){
+                if(it->second->state()==1){
+                    it->second->ShowInformationB();
+                    cout<<'\n';
+                }
+            }
+            cout<<cut<<'\n';
+            cout<<"Enter the commodityID to Buy(or enter 0 to go back):";
+            string sub_choose;
+            cin>>sub_choose;
+            if(sub_choose=="0") break;
+            cout<<"\nEnter the amount you want to buy:";
+            int buy_num;
+            cin>>buy_num;
+            cout<<'\n'<<cut<<'\n';
+            auto it = good_name.begin();
+            while(it != good_name.end()){
+                if(it->second->id()==sub_choose){
+                    if(it->second->stock()>buy_num){
+                        it->second->Sold(user,user_name[it->second->seller()],buy_num);
+                        cout<<"Success!\n";
+                        cout<<"Order time:"<<what_time();
+                        cout<<"\nUnit price:"<<it->second->unit_price();
+                        cout<<"\nAmount:"<<buy_num;
+                        cout<<"\nYour balance:";
+                        user->ShowMyMoney();
+                        cout<<'\n';
+                        break;
+                    }
+                    else{
+                        cout<<"Not enough";
+                        break;
+                    }
+                }
+                else{
+                    cout<<"Can't find this good";
+                    break;
+                }
+                it++;
+            }
+        }
+        else if(choose==2){
+            cout<<"Enter what you want to find:\n";
+            string aim;
+            cin>>aim;
+            cout<<"commodityID  commodityName  price  addedDate  sellerID";
+            for(auto it = good_name.begin();it != good_name.end();it++){
+                if(find(it->first,aim)){
+                    it->second->ShowInformationB();
+                    cout<<'\n';
+                }
+            }
+        }
+        else if(choose==3){
+            cout<<"orderID  commodityID  unitPrice  number  date  sellerID";
+            int num = user->TranNum();
+            for(int i = 0;i<num;i++){
+                if(user->MyTransaction(i)->buyer()==user->show_name()){
+                    user->MyTransaction(i)->ShowInformation('b');
+                }
+            }
+        }
+        else if(choose==4){
+            break;
+        }
+        else cout<<"Wrong input";
+        say_again(words);
+    }
 
 }
 
 void Release_Window(User* user) // 商品发布界面
 {
-    string words = "1.发布商品 2.查看发布商品 3.查看历史订单 4.返回用户主界面";
+    string words = "1.Release  2.My Goods 3.My Transaction 4.Back";
     say(words);
     int choose = 0;
     cin >> choose;
@@ -123,33 +208,33 @@ void Release_Window(User* user) // 商品发布界面
             string name,detail;
             float price;
             int num;
-            cout << "----请填写商品的相关信息"<<'\n' << "商品数量：";
+            cout << "----Enter Good's information----"<<'\n' << "Goods amount:";
             cin >> num;
-            cout << '\n' << "商品名称：";
+            cout << '\n' << "Goods name:";
             cin >> name;
-            cout << '\n' << "商品价格：";
+            cout << '\n' << "Goods price:";
             cin >> price;
-            cout << '\n' << "商品详细信息：";
+            cout << '\n' << "Goods' details";
             cin >> detail;
             // 创建新商品
             cout<<"*********************";
-            cout<<'\n'<<"请确认商品信息无误";
-            cout<<"商品名称："<<name<<'\n'<<"商品价格："<<price<<'\n'<<"商品数量："<<num<<'\n'<<"商品详细信息："<<detail<<'\n';
-            cout<<"若信息无误，输入y来确认此次操作，否则输入n取消此次操作：";
+            cout<<'\n'<<"please confirm these information";
+            cout<<"Goods name:"<<name<<'\n'<<"Goods price"<<price<<'\n'<<"Goods amount:"<<num<<'\n'<<"Goods' detail:"<<detail<<'\n';
+            cout<<"your choice(y/n):";
             char check;
             cin>>check;
             if(check=='y'){
                 Goods* new_good = new Goods(num,price,name,detail,user->show_name());
                 user->ReleaseGood(new_good);
-                cout<<"发布成功"<<'\n';
+                cout<<"Success"<<'\n';
                 break;
             }
             else if(check=='n'){
-                cout<<"取消发布"<<"\n";
+                cout<<"Cancel"<<"\n";
                 break;
             }
             else{
-                cout<<"无效操作"<<'\n';
+                cout<<"Wrong input"<<'\n';
                 break;
             }
 
@@ -158,66 +243,71 @@ void Release_Window(User* user) // 商品发布界面
         {
             user->ShowMyGoods();
             cout<<cut;
-            cout<<"可输入特定序号以对商品进行操作，或输入0以返回上一界面";
+            cout<<"enter a number for more details, or enter 0 to go back";
             int sub_choose;
             cin>>sub_choose;
             if(sub_choose==0)break;
             else if (sub_choose>user->r_num()){
-                cout<<"不存在该商品，操作失败"<<'\n';
+                cout<<"wrong input"<<'\n';
                 break;
             }
             else{
                 user->ShowMyGood(sub_choose);
-                cout<<"请输入需要修改的属性(1.价格 2.描述)：";
+                cout<<"Enter your what you want to modify or enter -1 to remove this good or enter anything else to quit(1.price 2.detail)：";
                 int subsub_choose;
                 cin>>subsub_choose;
+                if(subsub_choose==-1){
+                    user->RemoveGoods(sub_choose);
+                }
                 if(subsub_choose!=1&&sub_choose!=2){
-                    cout<<"输入错误指令！";
+                    cout<<"Back";
                     break;
                 }
-                cout<<"请输入修改后的值：";
+                cout<<"Please enter the replace information:";
                 string re;
                 cin>>re;
                 user->ModifyGood(sub_choose,subsub_choose,re);
-                cout<<"修改成功！";
+                cout<<"Success";
                 break;
             }
         }
         else if(choose==3)
         {
-
+            user->ShowMyTransactionS();
         }
         else if(choose==4) break;
-        else cout<<"输入错误，请重新输入";
+        else cout<<"Wrong input";
         say_again(words);
     }
 }
 
 void MyDetail_Window(User* user) // 个人信息界面
 {
+    string words = "1.My information  2.Modify information  3.Charge  4.Back";
+    say(words);
+    int choose;
+    cin>>choose;
+    while(true){
+        if (choose==1){
 
+        }
+        else if(choose==2){
+
+        }
+        else if(choose==3){
+
+        }
+        else if(choose==4){
+            break;
+        }
+        else cout<<"Wrong input";
+        say_again(words);
+    }
 }
-
-void GoodsDetailS_Window() // 卖家视角商品详细界面
-{
-
-}
-
-void GoodsDetailB_Window() // 买家视角商品详细界面
-{
-
-}
-
-void GoodsDetailA_Window() // 管理员视角商品详细界面
-{
-
-}
-
 void ShowUser_Window() // 用户管理界面
 {
 
 }
-
 void ShowTransaction_Window() // 订单管理界面
 {
 
